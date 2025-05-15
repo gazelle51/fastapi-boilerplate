@@ -148,13 +148,35 @@ The API uses JWT-based authentication. By default, the issued Bearer token will 
 
 ### Obtain a Token
 
-Send a `POST` request to `/api/v1/token` with valid credentials provided as form-data:
+To authenticate, send a `POST` request to `/api/v1/token` with Content-Type: application/x-www-form-urlencoded using OAuth2-style form data.
+
+**Request**
+
+```http
+POST /api/v1/token
+Content-Type: application/x-www-form-urlencoded
+```
+
+**Body**
+
+```ini
+grant_type=password&username=your_user&password=your_password
+```
+
+**Example (curl)**
+
+```bash
+curl -X POST localhost:8000/api/v1/token \
+  -H "Content-Type: application/x-www-form-urlencoded" \
+  -d "grant_type=password&username=your_user&password=your_password"
+```
+
+**Response**
 
 ```json
 {
-  "username": "your_user",
-  "password": "your_password",
-  "grant_type": "password"
+  "access_token": "your_jwt_token",
+  "token_type": "bearer"
 }
 ```
 
