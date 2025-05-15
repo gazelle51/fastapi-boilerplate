@@ -2,12 +2,15 @@
 Auth API routes.
 """
 
+from datetime import datetime, timedelta, timezone
+
 from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
 from src.auth.dependencies import get_current_user
 from src.auth.security import create_access_token
+from src.core.settings import settings
 from src.models import Token, TokenData, UserIn
 from src.services.users import authenticate_user, create_user, user_exists
 
@@ -30,7 +33,7 @@ def register(user_in: UserIn) -> Token:
                        message.
 
     Returns:
-        Token: The access token and its type (bearer).
+        Token: The access token, its type (bearer) and the expiration datetime.
     """
     if user_exists(user_in.username):
         raise HTTPException(
@@ -38,9 +41,14 @@ def register(user_in: UserIn) -> Token:
         )
 
     user = create_user(user_in.username, user_in.password)
-    access_token = create_access_token(data=TokenData(sub=user.username))
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=settings.access_token_expire_minutes
+    )
+    access_token = create_access_token(data=TokenData(sub=user.username, exp=expire))
 
-    return Token(access_token=access_token, token_type="bearer")
+    return Token(
+        access_token=access_token, token_type="bearer", expires_at=expire.isoformat()
+    )
 
 
 @router.post("/token", response_model=Token, response_class=JSONResponse)
@@ -59,7 +67,7 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
                        Unauthorized error.
 
     Returns:
-        Token: A JWT access token and its type (bearer).
+        Token: The access token, its type (bearer) and the expiration datetime.
     """
     user = authenticate_user(form_data.username, form_data.password)
 
@@ -68,7 +76,11 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Incorrect username or password",
         )
+    expire = datetime.now(timezone.utc) + timedelta(
+        minutes=settings.access_token_expire_minutes
+    )
+    access_token = create_access_token(data=TokenData(sub=user.username, exp=expire))
 
-    access_token = create_access_token(data=TokenData(sub=user.username))
-
-    return Token(access_token=access_token, token_type="bearer")
+    return Token(
+        access_token=access_token, token_type="bearer", expires_at=expire.isoformat()
+    )

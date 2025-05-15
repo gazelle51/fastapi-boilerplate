@@ -176,7 +176,8 @@ curl -X POST localhost:8000/api/v1/token \
 ```json
 {
   "access_token": "your_jwt_token",
-  "token_type": "bearer"
+  "token_type": "bearer",
+  "expires_at": "utc_datetime"
 }
 ```
 

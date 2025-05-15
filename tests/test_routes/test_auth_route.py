@@ -1,5 +1,6 @@
 # pylint: disable=missing-module-docstring
 
+from datetime import datetime
 from unittest.mock import MagicMock, patch
 
 from fastapi import FastAPI
@@ -33,10 +34,12 @@ def test_register_success(
     response = client.post("/register", json=user_in)
 
     assert response.status_code == 200
-    assert response.json() == {
-        "access_token": "mocked_access_token",
-        "token_type": "bearer",
-    }
+    response_json = response.json()
+    assert response_json["access_token"] == "mocked_access_token"
+    assert response_json["token_type"] == "bearer"
+    assert datetime.fromisoformat(
+        response_json["expires_at"].replace("Z", "+00:00")
+    )  # Assert ISO format
 
 
 @patch("src.routes.auth.user_exists")
@@ -73,10 +76,12 @@ def test_login_success(
     )
 
     assert response.status_code == 200
-    assert response.json() == {
-        "access_token": "mocked_access_token",
-        "token_type": "bearer",
-    }
+    response_json = response.json()
+    assert response_json["access_token"] == "mocked_access_token"
+    assert response_json["token_type"] == "bearer"
+    assert datetime.fromisoformat(
+        response_json["expires_at"].replace("Z", "+00:00")
+    )  # Assert ISO format
 
 
 @patch("src.routes.auth.authenticate_user")

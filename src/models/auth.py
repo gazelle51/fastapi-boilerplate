@@ -26,10 +26,11 @@ class Token(BaseModel):
 
     access_token: str
     token_type: str = "bearer"
+    expires_at: datetime
 
 
 class TokenData(BaseModel):
     """Data model for the JWT token payload."""
 
     sub: str  # The subject (e.g., user ID or username)
-    exp: datetime | None = None  # The expiration time of the token
+    exp: datetime  # The expiration time of the token

@@ -1,5 +1,6 @@
 # pylint: disable=missing-module-docstring
 
+from datetime import datetime, timedelta, timezone
 from unittest.mock import MagicMock, patch
 
 from fastapi import Depends, FastAPI
@@ -31,7 +32,9 @@ client = TestClient(app)
 @patch("src.auth.dependencies.decode_token")
 def test_get_current_user_valid_token(mock_decode_token: MagicMock):
     """Test the 'get_current_user' function when the token is valid."""
-    mock_decode_token.return_value = TokenData(sub="valid_user")
+    mock_decode_token.return_value = TokenData(
+        sub="valid_user", exp=datetime.now(timezone.utc) + timedelta(minutes=60)
+    )
 
     token = "valid_token"
     response = client.get("/protected", headers={"Authorization": f"Bearer {token}"})

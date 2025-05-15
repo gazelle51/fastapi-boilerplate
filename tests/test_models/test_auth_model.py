@@ -1,6 +1,6 @@
 # pylint: disable=missing-module-docstring
 
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 
 from src.models import Token, TokenData, User, UserIn
 
@@ -23,10 +23,16 @@ def test_user_in_model():
 
 def test_token_model():
     """Test Token model loads fields correctly."""
-    token_data = {"access_token": "some_access_token", "token_type": "bearer"}
+    expire = datetime.now(timezone.utc) + timedelta(minutes=60)
+    token_data = {
+        "access_token": "some_access_token",
+        "token_type": "bearer",
+        "expires_at": expire,
+    }
     token = Token(**token_data)
     assert token.access_token == "some_access_token"
     assert token.token_type == "bearer"
+    assert token.expires_at == expire
 
 
 def test_token_data_model():
@@ -38,11 +44,3 @@ def test_token_data_model():
     token_data_instance = TokenData(**token_data)
     assert token_data_instance.sub == "testuser"
     assert isinstance(token_data_instance.exp, datetime)
-
-
-def test_token_data_model_no_exp():
-    """Test TokenData model loads fields correctly when `exp` is missing."""
-    token_data = {"sub": "testuser"}
-    token_data_instance = TokenData(**token_data)
-    assert token_data_instance.sub == "testuser"
-    assert token_data_instance.exp is None

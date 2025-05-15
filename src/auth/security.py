@@ -1,9 +1,7 @@
 """
 Provides utility functions for password hashing and JWT token generation
-using PyJWT and Passlib.
+using PyJWT and bcrypt.
 """
-
-from datetime import datetime, timedelta, timezone
 
 import bcrypt
 import jwt
@@ -62,10 +60,6 @@ def create_access_token(data: TokenData) -> str:
              configured access token expiration (in minutes).
     """
     to_encode = data.model_dump()
-    expire = datetime.now(timezone.utc) + timedelta(
-        minutes=settings.access_token_expire_minutes
-    )
-    to_encode.update({"exp": expire})
     return jwt.encode(to_encode, SECRET_KEY, algorithm=ALGORITHM)  # type: ignore
 
 
