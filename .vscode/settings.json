@@ -1,0 +1,17 @@
+{
+  "pylint.enabled": true,
+  "[python]": {
+    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+        "source.organizeImports": "explicit"
+    },
+  },
+  "mypy-type-checker.args": [
+    "--files=src"
+  ],
+  "isort.args": [
+    "--profile",
+    "black"
+  ]
+}
