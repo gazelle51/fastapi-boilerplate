@@ -2,7 +2,7 @@
 Fake user database. To be replaced.
 """
 
-from src.auth.security import get_password_hash, verify_password
+from src.core.security import get_password_hash, verify_password
 from src.models import User, UserBase
 
 # Simulated user DB

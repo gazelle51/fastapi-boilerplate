@@ -8,7 +8,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.auth.security import create_access_token
+from src.core.security import create_access_token
 from src.core.settings import settings
 from src.models import Token, TokenData, UserIn
 from src.services.users import authenticate_user, create_user, user_exists

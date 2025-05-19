@@ -13,7 +13,7 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt import PyJWTError
 from starlette.middleware.base import BaseHTTPMiddleware
 
-from src.auth.security import decode_token
+from src.core.security import decode_token
 from src.services.users import get_user_base
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
