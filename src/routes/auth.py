@@ -8,7 +8,6 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
-from src.auth.dependencies import get_current_user
 from src.auth.security import create_access_token
 from src.core.settings import settings
 from src.models import Token, TokenData, UserIn
@@ -17,9 +16,7 @@ from src.services.users import authenticate_user, create_user, user_exists
 router = APIRouter()
 
 
-@router.post(
-    "/register", response_model=Token, dependencies=[Depends(get_current_user)]
-)
+@router.post("/register", response_model=Token)
 def register(user_in: UserIn) -> Token:
     """
     Registers a new user and returns a JWT access token.
@@ -40,7 +37,13 @@ def register(user_in: UserIn) -> Token:
             status_code=status.HTTP_400_BAD_REQUEST, detail="User already exists"
         )
 
-    user = create_user(user_in.username, user_in.password)
+    user = create_user(
+        user_in.username,
+        user_in.password,
+        user_in.first_name,
+        user_in.last_name,
+        user_in.email,
+    )
     expire = datetime.now(timezone.utc) + timedelta(
         minutes=settings.access_token_expire_minutes
     )

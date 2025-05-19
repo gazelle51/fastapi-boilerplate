@@ -10,4 +10,4 @@ Example:
 """
 
 from .api_response import ErrorRouteResponse, MessageResponse
-from .auth import Token, TokenData, User, UserIn
+from .auth import Token, TokenData, User, UserBase, UserIn

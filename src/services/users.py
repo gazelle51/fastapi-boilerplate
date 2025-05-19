@@ -3,11 +3,17 @@ Fake user database. To be replaced.
 """
 
 from src.auth.security import get_password_hash, verify_password
-from src.models import User
+from src.models import User, UserBase
 
 # Simulated user DB
 fake_users_db = {
-    "user": User(username="user", hashed_password=get_password_hash("password"))
+    "user": User(
+        username="user",
+        hashed_password=get_password_hash("password"),
+        first_name="Jane",
+        last_name="Doe",
+        email="jane.doe@testuser.com",
+    )
 }
 
 
@@ -37,7 +43,26 @@ def get_user(username: str) -> User | None:
     return fake_users_db.get(username)
 
 
-def create_user(username: str, password: str) -> User:
+def get_user_base(username: str) -> UserBase | None:
+    """
+    Retrieves a user from the fake user database by username but does not return
+    password.
+
+    Args:
+        username (str): The username to search for in the database.
+
+    Returns:
+        Optional[UserBase]: The user if found, otherwise None.
+    """
+    user_data = fake_users_db.get(username)
+    if user_data:
+        return UserBase(**user_data.model_dump(exclude={"hashed_password"}))
+    return None
+
+
+def create_user(
+    username: str, password: str, first_name: str, last_name: str, email: str
+) -> User:
     """
     Creates a new user, hashes the password, and stores the user in the fake user
     database.
@@ -50,7 +75,13 @@ def create_user(username: str, password: str) -> User:
         User: The newly created user.
     """
     hashed_password = get_password_hash(password)
-    user = User(username=username, hashed_password=hashed_password)
+    user = User(
+        username=username,
+        hashed_password=hashed_password,
+        first_name=first_name,
+        last_name=last_name,
+        email=email,
+    )
     fake_users_db[username] = user
     return user
 

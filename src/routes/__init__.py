@@ -7,10 +7,8 @@ API routes.
 
 from typing import Any
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 from fastapi.responses import JSONResponse
-
-from src.auth.dependencies import get_current_user
 
 from .auth import router as auth
 from .error import router as error
@@ -42,5 +40,5 @@ router = APIRouter(default_response_class=StandardResponse)
 
 # Register API routes
 router.include_router(auth, prefix="")
-router.include_router(index, prefix="", dependencies=[Depends(get_current_user)])
-router.include_router(error, prefix="/error", dependencies=[Depends(get_current_user)])
+router.include_router(index, prefix="")
+router.include_router(error, prefix="/error")

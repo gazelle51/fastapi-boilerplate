@@ -5,4 +5,5 @@ This module imports and exposes all custom FastAPI middlewares used to define th
 application's middlewares.
 """
 
+from .auth import AuthMiddleware
 from .trace_id import TraceIdMiddleware

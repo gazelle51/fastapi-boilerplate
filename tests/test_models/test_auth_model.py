@@ -7,18 +7,36 @@ from src.models import Token, TokenData, User, UserIn
 
 def test_user_model():
     """Test User model loads fields correctly."""
-    user_data = {"username": "testuser", "hashed_password": "hashedpassword123"}
+    user_data = {
+        "username": "testuser",
+        "hashed_password": "hashedpassword123",
+        "first_name": "Test",
+        "last_name": "User",
+        "email": "testuser@email.com",
+    }
     user = User(**user_data)
     assert user.username == "testuser"
     assert user.hashed_password == "hashedpassword123"
+    assert user.first_name == "Test"
+    assert user.last_name == "User"
+    assert user.email == "testuser@email.com"
 
 
 def test_user_in_model():
     """Test UserIn model loads fields correctly."""
-    user_in_data = {"username": "testuser", "password": "password123"}
+    user_in_data = {
+        "username": "testuser",
+        "password": "password123",
+        "first_name": "Test",
+        "last_name": "User",
+        "email": "testuser@email.com",
+    }
     user_in = UserIn(**user_in_data)
     assert user_in.username == "testuser"
     assert user_in.password == "password123"
+    assert user_in.first_name == "Test"
+    assert user_in.last_name == "User"
+    assert user_in.email == "testuser@email.com"
 
 
 def test_token_model():

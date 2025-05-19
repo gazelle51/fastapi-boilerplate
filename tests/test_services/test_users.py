@@ -1,6 +1,12 @@
 # pylint: disable=missing-module-docstring
 
-from src.services.users import authenticate_user, create_user, get_user, user_exists
+from src.services.users import (
+    authenticate_user,
+    create_user,
+    get_user,
+    get_user_base,
+    user_exists,
+)
 
 
 def test_user_exists_true():
@@ -26,17 +32,40 @@ def test_get_user_non_existing():
     assert user is None
 
 
+def test_get_user_base_existing():
+    """Test that get_user returns a user base when the user exists."""
+    user = get_user_base("user")
+    assert user is not None
+    assert user.username == "user"
+    assert not hasattr(user, "hashed_password")
+
+
+def test_get_user_base_non_existing():
+    """Test that get_user returns None for a non-existing user."""
+    user = get_user_base("nonexistent_user")
+    assert user is None
+
+
 def test_create_user_success():
     """Test that create_user successfully creates a new user."""
-    new_user = create_user("new_user", "newpassword")
+    new_user = create_user(
+        "new_user", "newpassword", "New", "User", "newuser@email.com"
+    )
     assert new_user.username == "new_user"
     assert new_user.hashed_password != "newpassword"  # Password should be hashed
+    assert new_user.first_name == "New"
+    assert new_user.last_name == "User"
+    assert new_user.email == "newuser@email.com"
 
 
 def test_create_user_duplicate():
     """Test that create_user does not overwrite an existing user."""
-    create_user("existing_user", "password123")
-    new_user = create_user("existing_user", "newpassword")
+    create_user(
+        "existing_user", "password123", "Existing", "User", "existinguser@email.com"
+    )
+    new_user = create_user(
+        "existing_user", "newpassword", "Existing", "User", "existinguser@email.com"
+    )
     assert new_user.username == "existing_user"
     assert new_user.hashed_password != "newpassword"
 

@@ -19,7 +19,7 @@ from src.exceptions import (
     rate_limit_handler,
     validation_exception_handler,
 )
-from src.middlewares import TraceIdMiddleware
+from src.middlewares import AuthMiddleware, TraceIdMiddleware
 from src.routes import router
 
 
@@ -71,6 +71,9 @@ def create_app() -> FastAPI:
             "Cache-Control",
             "Cookie",
         ],
+    )
+    app.add_middleware(
+        AuthMiddleware, exclude_paths=[settings.api_v1_prefix + "/token"]
     )
 
     # Register routers
