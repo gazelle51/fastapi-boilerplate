@@ -248,5 +248,6 @@ This application contains the following features:
 - CORS
 - Rate limiting
 - JWT authentication
+- User details added to request state
 - A sample Dockerfile
 - Auto-generated Swagger documentation
