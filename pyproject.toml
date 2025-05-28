@@ -10,7 +10,7 @@ packages = [{ include = "src", from = "." }]
 python = "^3.11"
 fastapi = "^0.115.12"
 uvicorn = { extras = ["standard"], version = "^0.34.2" }
-pydantic = {extras = ["email"], version = "^2.11.4"}
+pydantic = { extras = ["email"], version = "^2.11.4" }
 python-dotenv = "^1.1.0"
 pydantic-settings = "^2.9.1"
 starlette = "^0.46.2"
@@ -47,6 +47,12 @@ line_length = 88
 py-version = "3.11"
 ignore = ["venv", ".venv", "tests", "scripts"]
 max-line-length = 88
+
+[tool.pylint.extensions]
+load-plugins = ["pylint.extensions.bad_builtin"]
+
+[tool.pylint.deprecated_builtins]
+bad-functions = ["print"]
 
 [tool.mypy]
 python_version = "3.11"
