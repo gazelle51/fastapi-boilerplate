@@ -49,7 +49,6 @@ def create_app() -> FastAPI:
     app.state.limiter = limiter
 
     # Add middlewares
-    app.add_middleware(TraceIdMiddleware)
     app.add_middleware(SlowAPIMiddleware)
     app.add_middleware(
         CORSMiddleware,
@@ -72,6 +71,7 @@ def create_app() -> FastAPI:
             "Cookie",
         ],
     )
+    app.add_middleware(TraceIdMiddleware)
     app.add_middleware(
         AuthMiddleware, exclude_paths=[settings.api_v1_prefix + "/token"]
     )

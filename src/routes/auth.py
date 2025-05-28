@@ -8,11 +8,13 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from fastapi.responses import JSONResponse
 from fastapi.security import OAuth2PasswordRequestForm
 
+from src.core.logger import setup_logger
 from src.core.security import create_access_token
 from src.core.settings import settings
 from src.models import Token, TokenData, UserIn
 from src.services.users import authenticate_user, create_user, user_exists
 
+logger = setup_logger(__name__)
 router = APIRouter()
 
 
@@ -44,6 +46,9 @@ def register(user_in: UserIn) -> Token:
         user_in.last_name,
         user_in.email,
     )
+
+    logger.info("Registered new user: %s", user_in.username)
+
     expire = datetime.now(timezone.utc) + timedelta(
         minutes=settings.access_token_expire_minutes
     )
@@ -83,6 +88,8 @@ def login(form_data: OAuth2PasswordRequestForm = Depends()) -> Token:
         minutes=settings.access_token_expire_minutes
     )
     access_token = create_access_token(data=TokenData(sub=user.username, exp=expire))
+
+    logger.info("User logged in successfully: %s", user.username)
 
     return Token(
         access_token=access_token, token_type="bearer", expires_at=expire.isoformat()

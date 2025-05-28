@@ -13,9 +13,11 @@ from fastapi.security import OAuth2PasswordBearer
 from jwt import PyJWTError
 from starlette.middleware.base import BaseHTTPMiddleware
 
+from src.core.logger import setup_logger
 from src.core.security import decode_token
 from src.services.users import get_user_base
 
+logger = setup_logger(__name__)
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/v1/token")
 
 
@@ -68,7 +70,6 @@ class AuthMiddleware(BaseHTTPMiddleware):
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     content={"detail": "Invalid token"},
                 )
-
             # Get user data
             user = get_user_base(username)
             if user is None:
@@ -76,6 +77,8 @@ class AuthMiddleware(BaseHTTPMiddleware):
                     status_code=status.HTTP_401_UNAUTHORIZED,
                     content={"detail": "Invalid token"},
                 )
+
+            logger.info("Username of logged in user: %s", username)
 
             # Attach user to request
             request.state.user = user

@@ -30,6 +30,7 @@ def http_exception_handler(_: Request, exc: StarletteHTTPException) -> JSONRespo
         raise exc
 
     status_text = HTTPStatus(exc.status_code).phrase
+    logger.error("%s error: %s", status_text, exc)
     return JSONResponse(
         status_code=exc.status_code,
         content={
