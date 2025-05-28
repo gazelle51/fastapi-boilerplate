@@ -35,8 +35,7 @@ This repository can be used as a boilerplate for creating APIs in Python. It use
 .
 ├── scripts/                  # Custom scripts used by Poetry scripts
 ├── src/
-│   ├── auth/                 # Authentication logic (JWT, hashing, dependencies)
-│   ├── core/                 # App configuration (settings, logger, constants)
+│   ├── core/                 # App configuration (auth, settings, logger, constants)
 │   ├── exceptions/           # Custom exception handlers and error responses
 │   ├── middlewares/          # Custom FastAPI middlewares
 │   ├── models/               # Pydantic models
@@ -148,7 +147,7 @@ The API uses JWT-based authentication. By default, the issued Bearer token will 
 
 ### Obtain a Token
 
-To authenticate, send a `POST` request to `/api/v1/token` with Content-Type: application/x-www-form-urlencoded using OAuth2-style form data.
+To authenticate, send a `POST` request to `/api/v1/token` with `Content-Type: application/x-www-form-urlencoded` using OAuth2-style form data.
 
 **Request**
 
@@ -160,7 +159,7 @@ Content-Type: application/x-www-form-urlencoded
 **Body**
 
 ```ini
-grant_type=password&username=your_user&password=your_password
+grant_type=password&username=<your_user>&password=<your_password>
 ```
 
 **Example (curl)**
@@ -168,7 +167,7 @@ grant_type=password&username=your_user&password=your_password
 ```bash
 curl -X POST localhost:8000/api/v1/token \
   -H "Content-Type: application/x-www-form-urlencoded" \
-  -d "grant_type=password&username=your_user&password=your_password"
+  -d "grant_type=password&username=<your_user>&password=<your_password>"
 ```
 
 **Response**
