@@ -23,7 +23,6 @@ def open_route():
 @app.get("/protected")
 def protected_route(request: Request):
     """Protected route that requires a valid JWT token to access."""
-    print(request.state.user)
     return getattr(request.state, "user", None)
 
 
